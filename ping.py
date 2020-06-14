@@ -9,9 +9,9 @@ def ping(target):
     """
 
     packet = IP(dst=target) / ICMP()
-    ans = sr1(packet)
+    ans = sr1(packet, verbose=0)
 
     latency = ans.time - packet.sent_time
     latency = (latency * 1000) - Constants.LATENCY_OFFSET
 
-    return latency  # Scapy latency is 40ms higher than real in my PC
+    return latency, ans.src  # Scapy latency is 40ms higher than real in my PC

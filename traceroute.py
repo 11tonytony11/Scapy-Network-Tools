@@ -33,4 +33,4 @@ def trace(target):
         else:
             print("Hop {0}: at {1}".format(_ttl, reply.src))
 
-trace("tech-il.co.il")
+trace("ynet.co.il")
