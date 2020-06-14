@@ -1,7 +1,7 @@
-from scapy.layers.inet import UDP, IP
+from scapy.layers.inet import IP, ICMP
 from scapy.sendrecv import sr1
-import Constants
-import nslookup
+import ping
+
 
 
 def trace(target):
@@ -10,12 +10,11 @@ def trace(target):
     :return: None
     """
 
-    dest_ip = nslookup.nslookup(target)
-
+    _, dest_ip = ping.ping(target)
     for _ttl in range(Constants.MAX_TTL):
 
         # Create and send ICMP Packets
-        packet = IP(dst=target, ttl=_ttl) / UDP(dport=Constants.TRACE_PORT)
+        packet = IP(dst=target, ttl=_ttl) / ICMP()
         reply = sr1(packet, verbose=0)
 
         # Special Print for destination
