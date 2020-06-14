@@ -1,5 +1,6 @@
 from scapy.layers.inet import IP, ICMP
 from scapy.sendrecv import sr1
+import Constants
 import ping
 
 
@@ -11,11 +12,15 @@ def trace(target):
     """
 
     _, dest_ip = ping.ping(target)
-    for _ttl in range(Constants.MAX_TTL):
+    for _ttl in range(1, Constants.MAX_TTL):
 
         # Create and send ICMP Packets
         packet = IP(dst=target, ttl=_ttl) / ICMP()
         reply = sr1(packet, verbose=0)
+
+        # If reply is empty
+        if reply is None:
+            continue
 
         # Special Print for destination
         if reply.src in dest_ip:
