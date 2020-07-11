@@ -1,7 +1,8 @@
 import sys
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit, QGridLayout, QHBoxLayout, \
-    QStackedWidget
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit
+
+from ping import ping
 
 
 class Window(QWidget):
@@ -55,16 +56,22 @@ class Tab(QWidget):
 
 def update_gui(option, obj):
     if option == 0:
-        obj.ping.tmp.setText("Imagine UI is pinging")
-        # output = ping(obj.ping.field.text())
+        output = ping(obj.ping.field.text(), 4)
+
+        # Show ping results on screen
+        for i in range(4):
+            tmp = obj.ping.tmp.text() + "\n"
+            obj.ping.tmp.setText(tmp + "Got answer from: {0} in {1} ms".format(output[1], str(output[0][i])))
+
+        # Add separator
+        obj.ping.tmp.setText(obj.ping.tmp.text() + "\n--------------------------")
+
     if option == 1:
         obj.trace.tmp.setText("Imagine UI is tracing")
         # output = trace(obj.ping.field.text())
     if option == 2:
         obj.dns.tmp.setText("Imagine UI is looking")
         # output = nslookup(obj.ping.field.text())
-
-    #TODO: work with QListWidget ?
 
 
 if __name__ == "__main__":
