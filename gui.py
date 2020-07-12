@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit
 
 from ping import ping
+from traceroute import trace
 
 
 class Window(QWidget):
@@ -30,7 +31,6 @@ class Window(QWidget):
         run = QtWidgets.QPushButton("Execute")
         run.clicked.connect(lambda: update_gui(self.tabwidget.currentIndex(), self))
         run.setFixedSize(100, 30)
-
         # Add all widgets to layout
         layout.addWidget(self.tabwidget)
         layout.addWidget(run)
@@ -47,7 +47,7 @@ class Tab(QWidget):
         self.field = QLineEdit()
         self.field.setPlaceholderText("Enter URL/IP")
         self.tmp = QLabel("")  # Fix responsive issue
-
+        
         # Add widgets to layout
         layout.addWidget(self.field, 0)
         layout.addWidget(QLabel(""))
@@ -67,8 +67,9 @@ def update_gui(option, obj):
         obj.ping.tmp.setText(obj.ping.tmp.text() + "\n--------------------------")
 
     if option == 1:
-        obj.trace.tmp.setText("Imagine UI is tracing")
-        # output = trace(obj.ping.field.text())
+        tmp = obj.trace.tmp.text() + "\n"
+        obj.trace.tmp.setText(tmp + trace(obj.trace.field.text()))
+
     if option == 2:
         obj.dns.tmp.setText("Imagine UI is looking")
         # output = nslookup(obj.ping.field.text())

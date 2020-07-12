@@ -8,10 +8,11 @@ import ping
 def trace(target):
     """
     :param target: Target url/ip to be traced
-    :return: None
+    :return: trace output for gui
     """
 
     _, dest_ip = ping.ping(target)
+    output = []
     for _ttl in range(1, Constants.MAX_TTL):
 
         # Create and send ICMP Packets
@@ -24,13 +25,13 @@ def trace(target):
 
         # Special Print for destination
         if reply.src in dest_ip:
-            print("Hop {0}: at {1}".format(_ttl, reply.src))
-            print("-----------------------------------------")
-            print ("Reached {0} in {1} hops".format(target, _ttl))
+            output.append("Hop {0}: at {1}\n".format(_ttl, reply.src))
+            output.append("-----------------------------------------\n")
+            output.append("Reached {0} in {1} hops\n".format(target, _ttl))
             break
 
         # Print Log
         else:
-            print("Hop {0}: at {1}".format(_ttl, reply.src))
+            output.append("Hop {0}: at {1}\n".format(_ttl, reply.src))
 
-trace("ynet.co.il")
+    return ''.join(output)
