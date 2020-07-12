@@ -56,15 +56,8 @@ class Tab(QWidget):
 
 def update_gui(option, obj):
     if option == 0:
-        output = ping(obj.ping.field.text(), 4)
-
-        # Show ping results on screen
-        for i in range(4):
-            tmp = obj.ping.tmp.text() + "\n"
-            obj.ping.tmp.setText(tmp + "Got answer from: {0} in {1} ms".format(output[1], str(output[0][i])))
-
-        # Add separator
-        obj.ping.tmp.setText(obj.ping.tmp.text() + "\n--------------------------")
+        tmp = obj.ping.tmp.text() + "\n"
+        obj.ping.tmp.setText(tmp + ping(obj.ping.field.text(), 4)[0])
 
     if option == 1:
         tmp = obj.trace.tmp.text() + "\n"
