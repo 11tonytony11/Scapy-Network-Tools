@@ -2,6 +2,7 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit
 
+from nslookup import nslookup
 from ping import ping
 from traceroute import trace
 
@@ -64,8 +65,8 @@ def update_gui(option, obj):
         obj.trace.tmp.setText(tmp + trace(obj.trace.field.text()))
 
     if option == 2:
-        obj.dns.tmp.setText("Imagine UI is looking")
-        # output = nslookup(obj.ping.field.text())
+        tmp = obj.dns.tmp.text() + "\n"
+        obj.dns.tmp.setText(tmp + nslookup(obj.dns.field.text()))
 
 
 if __name__ == "__main__":
