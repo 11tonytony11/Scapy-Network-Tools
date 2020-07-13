@@ -1,10 +1,10 @@
 import sys
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit, QMenuBar, QAction
 
-from nslookup import nslookup
 from ping import ping
 from traceroute import trace
+from nslookup import nslookup
 
 
 class Window(QWidget):
@@ -13,9 +13,26 @@ class Window(QWidget):
 
         # Init window
         self.setWindowTitle("NET UTILS By TonyM")
+        self.menuBar = QMenuBar()
         self.resize(600, 300)
         layout = QVBoxLayout()
         self.setLayout(layout)
+
+        # Init menu bar
+        file = self.menuBar.addMenu("File")
+        help = self.menuBar.addMenu("Help")
+
+        # Create buttons
+        info = QAction("Useful Information", self)
+        settings = QAction("Settings", self)
+        about = QAction("about", self)
+        quit = QAction("Quit", self)
+
+        # Connect to backend
+        quit.triggered.connect(lambda: sys.exit())
+        settings.triggered.connect(lambda: print("Imaging settings work"))
+        about.triggered.connect(lambda: print("Imaging you see data about the software"))
+        info.triggered.connect(lambda: print("Imagine smart information about ping trace and nslookup"))
 
         # Init Tabs
         self.ping = Tab()
@@ -32,8 +49,14 @@ class Window(QWidget):
         run = QtWidgets.QPushButton("Execute")
         run.clicked.connect(lambda: update_gui(self.tabwidget.currentIndex(), self))
         run.setFixedSize(100, 30)
+
         # Add all widgets to layout
+        layout.addWidget(self.menuBar, 0)
         layout.addWidget(self.tabwidget)
+        file.addAction(settings)
+        file.addAction(quit)
+        help.addAction(info)
+        help.addAction(about)
         layout.addWidget(run)
 
 class Tab(QWidget):
