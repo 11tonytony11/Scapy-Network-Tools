@@ -121,15 +121,15 @@ class Window(QWidget):
         # Init window
         about = QDialog(self)
         about.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
-        about.setWindowTitle("About")
-        about.resize(200, 200)
+        about.setWindowTitle("Useful information")
+        about.resize(280, 200)
 
         # Create layout
         layout = QVBoxLayout()
         about.setLayout(layout)
 
-        layout.addWidget(QLabel("Ping is a cat."))
-        layout.addWidget(QLabel("traceroute is the internet's waze."))
+        layout.addWidget(QLabel("Ping is like your little brother annoying you."))
+        layout.addWidget(QLabel("Traceroute is the internet's waze."))
         layout.addWidget(QLabel("NSlookup is the internet's tour guide."))
         about.show()
 
