@@ -1,6 +1,8 @@
 import sys
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit, QMenuBar, QAction
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit, QMenuBar, QAction, \
+    QDialog, QGridLayout, QPushButton
 
 from ping import ping
 from traceroute import trace
@@ -30,9 +32,9 @@ class Window(QWidget):
 
         # Connect to backend
         quit.triggered.connect(lambda: sys.exit())
-        settings.triggered.connect(lambda: print("Imaging settings work"))
-        about.triggered.connect(lambda: print("Imaging you see data about the software"))
-        info.triggered.connect(lambda: print("Imagine smart information about ping trace and nslookup"))
+        settings.triggered.connect(self.open_settings)
+        about.triggered.connect(self.open_about)
+        info.triggered.connect(self.open_information)
 
         # Init Tabs
         self.ping = Tab()
@@ -59,6 +61,78 @@ class Window(QWidget):
         help.addAction(about)
         layout.addWidget(run)
 
+    def open_settings(self):
+
+        # Init window
+        settings = QDialog(self)
+        settings.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
+        settings.setWindowTitle("Settings")
+        settings.resize(230, 120)
+
+        # Create layout
+        layout = QGridLayout()
+        settings.setLayout(layout)
+
+        # Create all labels
+        ping_iters  = QLabel('Ping Iterations:')
+        ping_size   = QLabel('Ping data size:')
+        record_type = QLabel('DNS Record type:')
+        DNS_server  = QLabel('DNS Server:')
+
+        # Create fields
+        settings.lineEdit_ping_iters  = QLineEdit()
+        settings.lineEdit_ping_size   = QLineEdit()
+        settings.lineEdit_record_type = QLineEdit()
+        settings.lineEdit_DNS_server  = QLineEdit()
+
+        # Add fields to gui
+        settings.layout().addWidget(ping_iters, 0, 0)
+        settings.layout().addWidget(settings.lineEdit_ping_iters, 0, 1)
+        settings.layout().addWidget(ping_size, 1, 0)
+        settings.layout().addWidget(settings.lineEdit_ping_size, 1, 1)
+        settings.layout().addWidget(record_type, 2, 0)
+        settings.layout().addWidget(settings.lineEdit_record_type, 2, 1)
+        settings.layout().addWidget(DNS_server, 3, 0)
+        settings.layout().addWidget(settings.lineEdit_DNS_server, 3, 1)
+
+        # Apply button
+        apply_button = QPushButton('Apply')
+        settings.layout().addWidget(apply_button, 4, 0, 1, 2)
+        apply_button.clicked.connect(lambda: print("Imagine new settings were applied"))
+        settings.show()
+
+    def open_about(self):
+
+        # Init window
+        about = QDialog(self)
+        about.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
+        about.setWindowTitle("About")
+        about.resize(200, 200)
+
+        # Create layout
+        layout = QVBoxLayout()
+        about.setLayout(layout)
+
+        layout.addWidget(QLabel("This is an open source NET Utils software that is being developed by Tony Malinkovich."))
+        about.show()
+
+    def open_information(self):
+
+        # Init window
+        about = QDialog(self)
+        about.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
+        about.setWindowTitle("About")
+        about.resize(200, 200)
+
+        # Create layout
+        layout = QVBoxLayout()
+        about.setLayout(layout)
+
+        layout.addWidget(QLabel("Ping is a cat."))
+        layout.addWidget(QLabel("traceroute is the internet's waze."))
+        layout.addWidget(QLabel("NSlookup is the internet's tour guide."))
+        about.show()
+
 class Tab(QWidget):
     def __init__(self):
         super().__init__()
@@ -71,7 +145,7 @@ class Tab(QWidget):
         self.field = QLineEdit()
         self.field.setPlaceholderText("Enter URL/IP")
         self.tmp = QLabel("")  # Fix responsive issue
-        
+
         # Add widgets to layout
         layout.addWidget(self.field, 0)
         layout.addWidget(QLabel(""))
@@ -97,3 +171,6 @@ if __name__ == "__main__":
     screen = Window()
     screen.show()
     sys.exit(app.exec_())
+
+
+#For later: settings.lineEdit_xxxxxx.setPlaceholderText('text')
