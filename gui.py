@@ -2,8 +2,9 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit, QMenuBar, QAction, \
-    QDialog, QGridLayout, QPushButton
+    QDialog, QGridLayout, QPushButton, QComboBox
 
+import Constants
 from ping import ping
 from traceroute import trace
 from nslookup import nslookup
@@ -79,11 +80,21 @@ class Window(QWidget):
         record_type = QLabel('DNS Record type:')
         DNS_server  = QLabel('DNS Server:')
 
+
+        settings.comboBox = QComboBox(self)
+        settings.comboBox.addItem("A")
+        settings.comboBox.addItem("MX")
+
         # Create fields
         settings.lineEdit_ping_iters  = QLineEdit()
         settings.lineEdit_ping_size   = QLineEdit()
         settings.lineEdit_record_type = QLineEdit()
         settings.lineEdit_DNS_server  = QLineEdit()
+
+        # Set Example text
+        settings.lineEdit_ping_iters.setPlaceholderText('4')
+        settings.lineEdit_ping_size.setPlaceholderText('1')
+        settings.lineEdit_DNS_server.setPlaceholderText('9.9.9.9')
 
         # Add fields to gui
         settings.layout().addWidget(ping_iters, 0, 0)
@@ -91,14 +102,14 @@ class Window(QWidget):
         settings.layout().addWidget(ping_size, 1, 0)
         settings.layout().addWidget(settings.lineEdit_ping_size, 1, 1)
         settings.layout().addWidget(record_type, 2, 0)
-        settings.layout().addWidget(settings.lineEdit_record_type, 2, 1)
+        settings.layout().addWidget(settings.comboBox, 2, 1)
         settings.layout().addWidget(DNS_server, 3, 0)
         settings.layout().addWidget(settings.lineEdit_DNS_server, 3, 1)
 
         # Apply button
         apply_button = QPushButton('Apply')
         settings.layout().addWidget(apply_button, 4, 0, 1, 2)
-        apply_button.clicked.connect(lambda: print("Imagine new settings were applied"))
+        apply_button.clicked.connect(lambda: update_settings(settings))
         settings.show()
 
     def open_about(self):
@@ -165,6 +176,18 @@ def update_gui(option, obj):
         tmp = obj.dns.tmp.text() + "\n"
         obj.dns.tmp.setText(tmp + nslookup(obj.dns.field.text()))
 
+def update_settings(obj):
+
+    try:
+        Constants.PING_ITERS  = int(obj.lineEdit_ping_iters.text())
+        Constants.PING_SIZE   = int(obj.lineEdit_ping_size.text())
+        Constants.RECORD_TYPE = obj.comboBox.currentText()
+        Constants.DNS_IP      = obj.lineEdit_DNS_server.text()
+    except Exception as e:
+        Constants.PING_ITERS = 4
+        Constants.PING_SIZE = 1
+        Constants.RECORD_TYPE = "A"
+        Constants.DNS_IP ="9.9.9.9"
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -173,4 +196,3 @@ if __name__ == "__main__":
     sys.exit(app.exec_())
 
 
-#For later: settings.lineEdit_xxxxxx.setPlaceholderText('text')
