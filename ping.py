@@ -2,14 +2,15 @@ from scapy.layers.inet import ICMP, IP
 from scapy.sendrecv import sr1
 import Constants
 
-def ping(target, iterations = 1):
+def ping(target):
     """
     :param target: Target Website/ip
     :return: output string for gui, target server
     """
     latency_record = []
-    for i in range (iterations):
-        packet = IP(dst=target) / ICMP()
+    payload = "A" * int(Constants.PING_SIZE)
+    for i in range (Constants.PING_ITERS):
+        packet = IP(dst=target) / ICMP() / payload
         ans = sr1(packet, verbose=0)
 
         # Prepare output for gui

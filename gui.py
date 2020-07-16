@@ -1,4 +1,5 @@
 import sys
+
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit, QMenuBar, QAction, \
@@ -9,6 +10,17 @@ from ping import ping
 from traceroute import trace
 from nslookup import nslookup
 
+
+# TODO: Make design adjustments
+# TODO: Final bug fixes and error handling
+# TODO: Add icons and refactor
+# Finish of Version 1.0
+
+# TODO: Add 'run' tab for diagnostics
+# TODO: Design diagnostics test
+# TODO: Design diagnostics window
+# TODO: Create diagnostics test
+# Finish of Version 2.0
 
 class Window(QWidget):
     def __init__(self):
@@ -63,7 +75,6 @@ class Window(QWidget):
         layout.addWidget(run)
 
     def open_settings(self):
-
         # Init window
         settings = QDialog(self)
         settings.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
@@ -75,26 +86,25 @@ class Window(QWidget):
         settings.setLayout(layout)
 
         # Create all labels
-        ping_iters  = QLabel('Ping Iterations:')
-        ping_size   = QLabel('Ping data size:')
+        ping_iters = QLabel('Ping Iterations:')
+        ping_size = QLabel('Ping data size:')
         record_type = QLabel('DNS Record type:')
-        DNS_server  = QLabel('DNS Server:')
-
+        DNS_server = QLabel('DNS Server:')
 
         settings.comboBox = QComboBox(self)
         settings.comboBox.addItem("A")
         settings.comboBox.addItem("MX")
 
         # Create fields
-        settings.lineEdit_ping_iters  = QLineEdit()
-        settings.lineEdit_ping_size   = QLineEdit()
+        settings.lineEdit_ping_iters = QLineEdit()
+        settings.lineEdit_ping_size = QLineEdit()
         settings.lineEdit_record_type = QLineEdit()
-        settings.lineEdit_DNS_server  = QLineEdit()
+        settings.lineEdit_DNS_server = QLineEdit()
 
         # Set Example text
-        settings.lineEdit_ping_iters.setPlaceholderText('4')
-        settings.lineEdit_ping_size.setPlaceholderText('1')
-        settings.lineEdit_DNS_server.setPlaceholderText('9.9.9.9')
+        settings.lineEdit_ping_iters.setText(str(Constants.PING_ITERS))
+        settings.lineEdit_ping_size.setText(str(Constants.PING_SIZE))
+        settings.lineEdit_DNS_server.setText(Constants.DNS_IP)
 
         # Add fields to gui
         settings.layout().addWidget(ping_iters, 0, 0)
@@ -113,7 +123,6 @@ class Window(QWidget):
         settings.show()
 
     def open_about(self):
-
         # Init window
         about = QDialog(self)
         about.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
@@ -124,11 +133,14 @@ class Window(QWidget):
         layout = QVBoxLayout()
         about.setLayout(layout)
 
-        layout.addWidget(QLabel("This is an open source NET Utils software that is being developed by Tony Malinkovich."))
+        layout.addWidget(QLabel("NET Utils is an open source software that contains many useful utilities"
+                                " such as ping and trace.\n"
+                                "With NET Utils users can easily diagnose their network connection.\n"
+                                "It is also possible to adjust parameters such as DNS record type, packet size and more...\n"
+                                "\n\nNET Utils is developed by Tony Malinkovich."))
         about.show()
 
     def open_information(self):
-
         # Init window
         about = QDialog(self)
         about.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
@@ -143,6 +155,7 @@ class Window(QWidget):
         layout.addWidget(QLabel("Traceroute is the internet's waze."))
         layout.addWidget(QLabel("NSlookup is the internet's tour guide."))
         about.show()
+
 
 class Tab(QWidget):
     def __init__(self):
@@ -166,7 +179,7 @@ class Tab(QWidget):
 def update_gui(option, obj):
     if option == 0:
         tmp = obj.ping.tmp.text() + "\n"
-        obj.ping.tmp.setText(tmp + ping(obj.ping.field.text(), 4)[0])
+        obj.ping.tmp.setText(tmp + ping(obj.ping.field.text())[0])
 
     if option == 1:
         tmp = obj.trace.tmp.text() + "\n"
@@ -176,23 +189,24 @@ def update_gui(option, obj):
         tmp = obj.dns.tmp.text() + "\n"
         obj.dns.tmp.setText(tmp + nslookup(obj.dns.field.text()))
 
-def update_settings(obj):
 
+def update_settings(obj):
     try:
-        Constants.PING_ITERS  = int(obj.lineEdit_ping_iters.text())
-        Constants.PING_SIZE   = int(obj.lineEdit_ping_size.text())
+        Constants.PING_ITERS = int(obj.lineEdit_ping_iters.text())
+        Constants.PING_SIZE = int(obj.lineEdit_ping_size.text())
         Constants.RECORD_TYPE = obj.comboBox.currentText()
-        Constants.DNS_IP      = obj.lineEdit_DNS_server.text()
-    except Exception as e:
+        Constants.DNS_IP = obj.lineEdit_DNS_server.text()
+    except Exception:
         Constants.PING_ITERS = 4
         Constants.PING_SIZE = 1
         Constants.RECORD_TYPE = "A"
-        Constants.DNS_IP ="9.9.9.9"
+        Constants.DNS_IP = "9.9.9.9"
+
+    obj.close()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     screen = Window()
     screen.show()
     sys.exit(app.exec_())
-
-
