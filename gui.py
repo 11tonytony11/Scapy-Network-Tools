@@ -11,8 +11,7 @@ from traceroute import trace
 from nslookup import nslookup
 
 
-# TODO: Make design adjustments
-# TODO: Final bug fixes and error handling
+# TODO: Final bug fixes
 # TODO: Add icons and refactor
 # Finish of Version 1.0
 
