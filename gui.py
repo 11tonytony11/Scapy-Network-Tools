@@ -3,15 +3,14 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication, QTabWidget, QLineEdit, QMenuBar, QAction, \
-    QDialog, QGridLayout, QPushButton, QComboBox
+    QDialog, QGridLayout, QPushButton, QComboBox, QMessageBox
 
 import Constants
+from nslookup import nslookup
 from ping import ping
 from traceroute import trace
-from nslookup import nslookup
 
 
-# TODO: Final bug fixes
 # TODO: Add icons and refactor
 # Finish of Version 1.0
 
@@ -34,7 +33,7 @@ class Window(QWidget):
 
         # Init menu bar
         file = self.menuBar.addMenu("File")
-        help = self.menuBar.addMenu("Help")
+        help_tab = self.menuBar.addMenu("Help")
 
         # Create buttons
         info = QAction("Useful Information", self)
@@ -69,8 +68,8 @@ class Window(QWidget):
         layout.addWidget(self.tabwidget)
         file.addAction(settings)
         file.addAction(quit)
-        help.addAction(info)
-        help.addAction(about)
+        help_tab.addAction(info)
+        help_tab.addAction(about)
         layout.addWidget(run)
 
     def open_settings(self):
@@ -88,7 +87,7 @@ class Window(QWidget):
         ping_iters = QLabel('Ping Iterations:')
         ping_size = QLabel('Ping data size:')
         record_type = QLabel('DNS Record type:')
-        DNS_server = QLabel('DNS Server:')
+        dns_server = QLabel('DNS Server:')
 
         settings.comboBox = QComboBox(self)
         settings.comboBox.addItem("A")
@@ -112,7 +111,7 @@ class Window(QWidget):
         settings.layout().addWidget(settings.lineEdit_ping_size, 1, 1)
         settings.layout().addWidget(record_type, 2, 0)
         settings.layout().addWidget(settings.comboBox, 2, 1)
-        settings.layout().addWidget(DNS_server, 3, 0)
+        settings.layout().addWidget(dns_server, 3, 0)
         settings.layout().addWidget(settings.lineEdit_DNS_server, 3, 1)
 
         # Apply button
@@ -135,7 +134,8 @@ class Window(QWidget):
         layout.addWidget(QLabel("NET Utils is an open source software that contains many useful utilities"
                                 " such as ping and trace.\n"
                                 "With NET Utils users can easily diagnose their network connection.\n"
-                                "It is also possible to adjust parameters such as DNS record type, packet size and more...\n"
+                                "It is also possible to adjust parameters such as DNS record type, "
+                                "packet size and more...\n"
                                 "\n\nNET Utils is developed by Tony Malinkovich."))
         about.show()
 
@@ -176,17 +176,24 @@ class Tab(QWidget):
 
 
 def update_gui(option, obj):
-    if option == 0:
-        tmp = obj.ping.tmp.text() + "\n"
-        obj.ping.tmp.setText(tmp + ping(obj.ping.field.text())[0])
+    try:
+        if option == 0:
+            tmp = obj.ping.tmp.text() + "\n"
+            obj.ping.tmp.setText(tmp + ping(obj.ping.field.text())[0])
 
-    if option == 1:
-        tmp = obj.trace.tmp.text() + "\n"
-        obj.trace.tmp.setText(tmp + trace(obj.trace.field.text()))
+        if option == 1:
+            tmp = obj.trace.tmp.text() + "\n"
+            obj.trace.tmp.setText(tmp + trace(obj.trace.field.text()))
 
-    if option == 2:
-        tmp = obj.dns.tmp.text() + "\n"
-        obj.dns.tmp.setText(tmp + nslookup(obj.dns.field.text()))
+        if option == 2:
+            tmp = obj.dns.tmp.text() + "\n"
+            obj.dns.tmp.setText(tmp + nslookup(obj.dns.field.text()))
+    except Exception:
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText("Error! \n\n-Make Sure you entered correct dst.  \n-Make sure you have admin permissions.")
+        msg.setWindowTitle("Error")
+        msg.exec_()
 
 
 def update_settings(obj):
