@@ -39,10 +39,10 @@ class Window(QWidget):
         info = QAction("Useful Information", self)
         settings = QAction("Settings", self)
         about = QAction("about", self)
-        quit = QAction("Quit", self)
+        quit_button = QAction("Quit", self)
 
         # Connect to backend
-        quit.triggered.connect(lambda: sys.exit())
+        quit_button.triggered.connect(lambda: sys.exit())
         settings.triggered.connect(self.open_settings)
         about.triggered.connect(self.open_about)
         info.triggered.connect(self.open_information)
@@ -67,7 +67,7 @@ class Window(QWidget):
         layout.addWidget(self.menuBar, 0)
         layout.addWidget(self.tabwidget)
         file.addAction(settings)
-        file.addAction(quit)
+        file.addAction(quit_button)
         help_tab.addAction(info)
         help_tab.addAction(about)
         layout.addWidget(run)

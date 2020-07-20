@@ -4,7 +4,6 @@ import Constants
 import ping
 
 
-
 def trace(target):
     """
     :param target: Target url/ip to be traced

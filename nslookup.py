@@ -12,7 +12,8 @@ def nslookup(url):
     """
     output = []
     # Creating and sending DNS query
-    ans = sr1(IP(dst = Constants.DNS_IP) / UDP(sport=RandShort(), dport = Constants.DNS_PORT) / DNS(rd = 1, qd = DNSQR(qname=url, qtype=Constants.RECORD_TYPE)), verbose=0)
+    ans = sr1(IP(dst=Constants.DNS_IP) / UDP(sport=RandShort(), dport=Constants.DNS_PORT) /
+              DNS(rd=1, qd=DNSQR(qname=url, qtype=Constants.RECORD_TYPE)), verbose=0)
 
     # Creating and returning list of resolved ips
     for idx in range(ans[DNS].ancount):
@@ -21,6 +22,4 @@ def nslookup(url):
         else:
             output.append(ans.an[0][idx].exchange.decode())
 
-
-
-    return "found {0} {1} Record(s):\n{2}\n".format(len(output),Constants.RECORD_TYPE, '\n'.join(output))
+    return "found {0} {1} Record(s):\n{2}\n".format(len(output), Constants.RECORD_TYPE, '\n'.join(output))
