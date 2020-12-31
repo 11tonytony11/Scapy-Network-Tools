@@ -1,4 +1,2 @@
 # Scapy-Network-Tools
-I am creating scapy-based open source program containing useful custom tools such as traceroute, ping and nslookup. In the future, I will create connectivity test that will help users to diagnose their network easier.
-
-Currently I have created initial functions for nslookup, ping and tracert. GUI will be availabe soon.
+This is a scapy-based open source program containing useful custom tools such as traceroute, ping, and nslookup. The main goal is to create a simplified solution to use network-related powerful tools with a user-friendly GUI.
